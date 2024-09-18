@@ -33,7 +33,7 @@ sig = WhiteNoise.ar(amp.lag(0.02));
 
 (~control = Routine.new({
 	{
-		~synth.set(\amp,~val.linlin(180,1100,0.0001,0.1));
+		~synth.set(\amp,~val.linlin(20,1100,0.0001,0.1));
 		0.01.wait;
 	}.loop;
 }).play;
