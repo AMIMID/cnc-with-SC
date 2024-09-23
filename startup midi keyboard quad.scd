@@ -27,10 +27,9 @@ s.waitForBoot{
 
 (
 SynthDef.new(\ob, {
-	arg  n1=1,cutt=1200,decay=6,t=2,attack=0.01,az=0,el=0,mag=1,mx=1,my=1,mz=1;
-	var phase,scale=4,pl=0,osc,sph,sphere,az_o,el_o;
-	var mg_x,mg_y,mg_z,mag_o,v,q,rot,cr,i,j,k,rr;
-	var freq, env,m=1,bank,pitch,fund=55,ange=0, ang;
+	arg  n1=1,cutt=1200,decay=6,t=2,attack=0.01,az=0,el=0,mag=1;
+	var phase,scale=4,pl=0,osc,sphere,mag_o;
+	var freq, env,m=1,bank,pitch,fund=55,ange=0;
 ///wt_osc
 	var en,sig,wt_osc,angl=0,level,levels;
 //wt_osc_pan
@@ -66,7 +65,7 @@ wt = signal.asWavetable;
 
 		az1=(az1+(1)).wrap(180.neg,180);
 
-	el1=(el1+(360-(360/1.6180339887499))).wrap(90.neg,90);
+	el1=(el1+(360-(360/1.6180339887499))).wrap(180.neg,180);
 
 	sph1=Spherical(1,az1.degrad,el1.degrad).theta.round(0.00001);
 
@@ -136,37 +135,13 @@ bank=18;
 pitch=2.pow(n1/(2*6));
 freq=(fund*scale)*pitch;
 
-ang=(360-(360/1.6180339887499));
-az_o = az.round(0.0001);
-el_o = el.round(0.0001);
-cr=Spherical(mag,az,el);
-v=Quaternion(0,cr.x,cr.y,cr.z);
-
 bank.do{
 phase=exp(Complex(0,1)*ange.degrad).theta;
 ange=(ange+(360-(360/1.6180339887499))).wrap(0,360);
 
-rr=Spherical(1,~az.[pl],~el.[pl]);
-rot=[rr.x,rr.y,rr.z];
-i=Quaternion(0, rot.[0], 0, 0);
-j=Quaternion(0, 0, rot.[1], 0);
-k=Quaternion(0, 0, 0, rot.[2]);
+mag_o=Cartesian(~magx.[pl]/(2.sqrt),~magy.[pl]/(2.sqrt),~magz.[pl]/(2.sqrt)).rho/(2.sqrt);
 
-q=(cos(ang.degrad)+(sin(ang.degrad)*(i+j+k)));
-v=q*v*q.conjugate;
-pl=pl+1;
-
-sph=Cartesian(v.b,v.c,v.d);
-
-mg_x=(Complex(cos((sph.theta.round(0.00001)*mx).wrap(pi.neg,pi)),cos((sph.theta.round(0.00001)*mx).wrap(pi.neg,pi))).rho*Complex(cos((sph.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((sph.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho);
-
-mg_y=(Complex(sin((sph.theta.round(0.00001)*my).wrap(pi.neg,pi)),sin((sph.theta.round(0.00001)*my).wrap(pi.neg,pi))).rho*Complex(cos((sph.phi.round(0.00001)).wrap((pi/2).neg,(pi/2))),cos((sph.phi.round(0.00001)).wrap((pi/2).neg,(pi/2)))).rho);
-
-mg_z= Complex(cos((sph.phi.round(0.00001)*mz).wrap((pi/2).neg,(pi/2))),cos((sph.phi.round(0.00001)*mz).wrap((pi/2).neg,(pi/2)))).rho;
-
-mag_o=Cartesian(mg_x/(2.sqrt),mg_y/(2.sqrt),mg_z/(2.sqrt)).rho/(2.sqrt);
-
-sphere=Spherical(mag_o,sph.theta,sph.phi);
+sphere=Spherical(mag_o,~az.[pl],~el.[pl]);
 
 env=EnvGen.ar(Env.perc(attack,decay,pitch.reciprocal),doneAction:2,levelScale:mag_o);
 	//	env=EnvGen.ar(Env.sine(decay,pitch.reciprocal),doneAction:2,levelScale:mag_o);
@@ -197,7 +172,7 @@ MIDIdef.noteOn(\note, { |val, num, chan, src|
 	if(num < 49) {
 		num = num - 1
 	};
-			~a=Synth(\ob, [n1: num - 48,cutt:1760, out: [(0..3).rotate(4.rand)], az:~az.[720.rand], el:~el.[720.rand], mag:~magx.[720.rand] ,mx:5.rand ,my:5.rand  ,mz:5.rand]);
+			~a=Synth(\ob, [n1: num - 48,cutt:1760, out: [(0..3).rotate(4.rand)], az:~az.[720.rand], el:~el.[720.rand], mag:~magx.[720.rand]]);
 
 }, noteNum: (36..96));
 );
