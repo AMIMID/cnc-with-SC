@@ -86,12 +86,12 @@ Out.ar(0,Pan2.ar(signal2*16,pos2,env2))
 MIDIClient.init;
 MIDIIn.connectAll;
 
-MIDIdef.noteOn(\note, { |val, num, chan, src|
+MIDIdef.cc(\note, { |val, num, chan, src|
 	[val, num, chan, src].postln;
-	if(num < 49) {
+	if(num < 61) {
 		num = num - 1
 	};
-	~a=Synth(\synhtone, [n: num - 48,cutt:1760*10]);
+	~a=Synth(\synhtone, [n: num - 60,cutt:1760*2]);
 
 }, noteNum: (36..96));
 );

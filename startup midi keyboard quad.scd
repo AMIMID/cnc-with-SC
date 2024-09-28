@@ -27,8 +27,8 @@ s.waitForBoot{
 
 (
 SynthDef.new(\ob, {
-	arg  n1=1,cutt=1200,decay=6,t=2,attack=0.01,az=0,el=0,mag=1;
-	var phase,scale=4,pl=0,osc,sphere,mag_o;
+	arg  n1=1,cutt=1200,decay=6,t=2,attack=0.01,pl=0;
+	var phase,scale=4,osc,sphere,mag_o;
 	var freq, env,m=1,bank,pitch,fund=55,ange=0;
 ///wt_osc
 	var en,sig,wt_osc,angl=0,level,levels;
@@ -131,7 +131,7 @@ mag_z=Complex(sin((sphz.phi.round(0.00001)*m_z).wrap((pi/2).neg,(pi/2))),sin((sp
 	};
 
 ///////////////////////////synth
-bank=18;
+bank=90;
 pitch=2.pow(n1/(2*6));
 freq=(fund*scale)*pitch;
 
@@ -139,9 +139,9 @@ bank.do{
 phase=exp(Complex(0,1)*ange.degrad).theta;
 ange=(ange+(360-(360/1.6180339887499))).wrap(0,360);
 
-mag_o=Cartesian(~magx.[pl]/(2.sqrt),~magy.[pl]/(2.sqrt),~magz.[pl]/(2.sqrt)).rho/(2.sqrt);
+mag_o=Cartesian(Select.kr(pl,~magx)/(2.sqrt),Select.kr(pl,~magy)/(2.sqrt),Select.kr(pl,~magz)/(2.sqrt)).rho/(2.sqrt);
 
-sphere=Spherical(mag_o,~az.[pl],~el.[pl]);
+sphere=Spherical(mag_o,Select.kr(pl,~az)/(2.sqrt),Select.kr(pl,~el)/(2.sqrt));
 
 env=EnvGen.ar(Env.perc(attack,decay,pitch.reciprocal),doneAction:2,levelScale:mag_o);
 	//	env=EnvGen.ar(Env.sine(decay,pitch.reciprocal),doneAction:2,levelScale:mag_o);
@@ -169,10 +169,10 @@ MIDIIn.connectAll;
 
 MIDIdef.noteOn(\note, { |val, num, chan, src|
 	[val, num, chan, src].postln;
-	if(num < 49) {
+	if(num < 61) {
 		num = num - 1
 	};
-			~a=Synth(\ob, [n1: num - 48,cutt:1760, out: [(0..3).rotate(4.rand)], az:~az.[720.rand], el:~el.[720.rand], mag:~magx.[720.rand]]);
+			~a=Synth(\ob, [n1: num - 60,cutt:1760, out: [(0..3).rotate(4.rand)], pl:360.rand]);
 
 }, noteNum: (36..96));
 );
