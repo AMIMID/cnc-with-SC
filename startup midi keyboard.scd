@@ -48,7 +48,7 @@ phase3=exp(Complex(0,1)*angle3.degrad).theta;
 angle3=(angle3+(360-(360/1.6180339887499))).wrap(0,360);							phase3=(Complex(sin(phase3.round(0.0001)*m1),sin(phase3.round(0.0001)*m1)).rho.round(0.0001)*Complex(cos(phase3.round(0.0001)*m1),cos(phase3.round(0.0001)*m1)).rho).round(0.0001);};
 ~posR=720.collect{
 phase4=exp(Complex(0,1)*angle4.degrad).theta;
-angle4=(angle4+(360-(360/1.6180339887499))).wrap(0,360);						phase4=(Complex(sin(phase4.round(0.0001)*m2),sin(phase4.round(0.0001)*m2)).rho.round(0.0001)*Complex(cos(phase4.round(0.0001)*m2),cos(phase4.round(0.0001)*m2)).rho).neg.round(0.0001);};
+angle4=(angle4+(360-(360/1.6180339887499))).wrap(0,360);						phase4=(Complex(sin(phase4.round(0.0001)*m2),sin(phase4.round(0.0001)*m2)).rho.round(0.0001)*Complex(cos(phase4.round(0.0001)*m2),cos(phase4.round(0.0001)*m2)).rho).round(0.0001).neg;};
 
 ~magL = 720.collect{
 	phase5=exp(Complex(0,1)*angle5.degrad).theta;
@@ -86,7 +86,7 @@ Out.ar(0,Pan2.ar(signal2*16,pos2,env2))
 MIDIClient.init;
 MIDIIn.connectAll;
 
-MIDIdef.cc(\note, { |val, num, chan, src|
+MIDIdef.noteOn(\note, { |val, num, chan, src|
 	[val, num, chan, src].postln;
 	if(num < 61) {
 		num = num - 1
