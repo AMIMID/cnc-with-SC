@@ -17,8 +17,8 @@ s.waitForBoot{
 
 (
 SynthDef.new(\synhtone,{
-arg n=1,rq=1;
-var signal1,signal2,env1,env2,pl=89,m=3,fund=55,pitch;
+arg n=1,rq=0.1;
+var signal1,signal2,env1,env2,pl=89,m=1,fund=55,pitch;
 var pos1,pos2,ph1,ph2,mag;
 var phase1,angle1=0,phase2,angle2=90;
 var phase3,phase4,angle3=0,angle4=0;
@@ -78,18 +78,16 @@ angle4=(angle4+(360-(360/1.6180339887499))).wrap(0,360);						phase4=(Complex(si
 		amp=m.reciprocal;
 		freq=pitch*amp.reciprocal;
 
-		env1=EnvGen.ar(Env.perc(0.01,4,mag),doneAction:2);
-		env2=EnvGen.ar(Env.perc(0.01,4,mag),doneAction:2);
+		env1=EnvGen.ar(Env.sine(8,mag),doneAction:2);
 
-
-			signal1=BPF.ar(Osc.ar(~b.bufnum,freq,ph1,m.reciprocal),freq,rq,0.1);
-		signal2=BPF.ar(Osc.ar(~b.bufnum,freq,ph2,m.reciprocal),freq,rq,0.1);
+			signal1=BPF.ar(Osc.ar(~b.bufnum,freq,ph1,m.reciprocal),freq,rq);
+		signal2=BPF.ar(Osc.ar(~b.bufnum,freq,ph2,m.reciprocal),freq,rq);
 m=m+1;
 pl=pl+1;
 
 
-Out.ar(0,Pan2.ar(signal1*16,pos1,env1));
-Out.ar(0,Pan2.ar(signal2*16,pos2,env2))
+Out.ar(0,Pan2.ar(signal1,pos1,env1));
+Out.ar(0,Pan2.ar(signal2,pos2,env1))
 };
 }).add;
 );
