@@ -18,13 +18,13 @@ s.waitForBoot{
 (
 SynthDef.new(\synhtone,{
 arg n=1,cutt=1760*2;
-var signal1,signal2,env1,env2,pl=89,m=1,fund=55,pitch;
+var signal1,signal2,env1,env2,pl=89,m=3,fund=55,pitch;
 var pos1,pos2,ph1,ph2,mag;
 var phase1,angle1=0,phase2,angle2=90;
-var phase3,phase4,angle3=0,angle4=0,m1=3;
+var phase3,phase4,angle3=0,angle4=0;
 var phase5,angle5=0,mag1,phase6,angle6=0,mag2;
 var env,sig,wt,ang=0,level,levels;
-var chainx,chainy;
+var rq=1,octave=2,freq,amp;
 
 ~levels=720.collect{
 level=exp(Complex(0,1)*ang).imag;
@@ -34,30 +34,30 @@ env = Env(~levels,[1]);sig=env.asSignal(1024);wt = sig.asWavetable;
 ~b.loadCollection(wt);
 //sig.plot;
 
-~phase1=720.collect{
+/*~phase1=720.collect{
 phase1=exp(Complex(0,1)*angle1.degrad).theta;
 angle1=(angle1+(360-(360/1.6180339887499))).wrap(0,360);
 phase1.round(0.0001)};
 ~phase2=720.collect{
 phase2=exp(Complex(0,1)*angle2.degrad).theta;
 angle2=(angle2+(360-(360/1.6180339887499))).wrap(0,360);
-phase2.round(0.0001).neg};
+phase2.round(0.0001).neg};*/
 
 ~posL=720.collect{
 phase3=exp(Complex(0,1)*angle3.degrad).theta;
-angle3=(angle3+(360-(360/1.6180339887499))).wrap(0,360);							phase3=(Complex(sin(phase3.round(0.0001)*m1),sin(phase3.round(0.0001)*m1)).rho.round(0.0001)*Complex(cos(phase3.round(0.0001)*m1),cos(phase3.round(0.0001)*m1)).rho).round(0.0001);};
+angle3=(angle3+(360-(360/1.6180339887499))).wrap(0,360);							phase3=(Complex(sin(phase3.round(0.0001)*m),sin(phase3.round(0.0001)*m)).rho.round(0.0001)*Complex(cos(phase3.round(0.0001)*m),cos(phase3.round(0.0001)*m)).rho).round(0.0001);};
 
 ~posR=720.collect{
 phase4=exp(Complex(0,1)*angle4.degrad).theta;
-angle4=(angle4+(360-(360/1.6180339887499))).wrap(0,360);						phase4=(Complex(sin(phase4.round(0.0001)*m1),sin(phase4.round(0.0001)*m1)).rho.round(0.0001)*Complex(cos(phase4.round(0.0001)*m1),cos(phase4.round(0.0001)*m1)).rho).round(0.0001).neg;};
+angle4=(angle4+(360-(360/1.6180339887499))).wrap(0,360);						phase4=(Complex(sin(phase4.round(0.0001)*m),sin(phase4.round(0.0001)*m)).rho.round(0.0001)*Complex(cos(phase4.round(0.0001)*m),cos(phase4.round(0.0001)*m)).rho).round(0.0001).neg;};
 
 ~magL = 720.collect{
 	phase5=exp(Complex(0,1)*angle5.degrad).theta;
-	angle5=(angle5+(360-(360/1.6180339887499))).wrap(0,360);	mag1=Complex(cos(phase5.round(0.0001)*m1),cos(phase5.round(0.0001)*m1)).rho.round(0.0001)*Complex(cos(phase5.round(0.0001)*m1),cos(phase5.round(0.0001)*m1)).rho.round(0.0001);};
+	angle5=(angle5+(360-(360/1.6180339887499))).wrap(0,360);	mag1=Complex(cos(phase5.round(0.0001)*m),cos(phase5.round(0.0001)*m)).rho.round(0.0001)*Complex(cos(phase5.round(0.0001)*m),cos(phase5.round(0.0001)*m)).rho.round(0.0001);};
 
 ~magR = 720.collect{
 	phase6=exp(Complex(0,1)*angle6.degrad).theta;
-	angle6=(angle6+(360-(360/1.6180339887499))).wrap(0,360);	mag2=Complex(sin(phase6.round(0.0001)*m1),sin(phase6.round(0.0001)*m1)).rho.round(0.0001)*Complex(cos(phase6.round(0.0001)*m1),cos(phase6.round(0.0001)*m2)).rho.round(0.0001);};
+	angle6=(angle6+(360-(360/1.6180339887499))).wrap(0,360);	mag2=Complex(sin(phase6.round(0.0001)*m),sin(phase6.round(0.0001)*m)).rho.round(0.0001)*Complex(cos(phase6.round(0.0001)*m),cos(phase6.round(0.0001)*m)).rho.round(0.0001);};
 
 pitch=fund*2.pow(n/12);
 45.do{
@@ -66,14 +66,23 @@ pitch=fund*2.pow(n/12);
 
 		mag=(Complex(~magL.[pl]/(2.sqrt),~magR.[pl]/(2.sqrt)).rho/(2.sqrt));
 
-		ph1=SinOsc.ar(mag.reciprocal,~phase1.[pl]);
-		ph2=SinOsc.ar(mag.reciprocal,~phase2.[pl]);
+		//ph1=SinOsc.ar(mag.reciprocal,~phase1.[pl]);
+		//ph2=SinOsc.ar(mag.reciprocal,~phase2.[pl]);
 
-		env1=EnvGen.ar(Env.perc(0.01,3),doneAction:2,levelScale:mag);
-		env2=EnvGen.ar(Env.perc(0.01,3),doneAction:2,levelScale:mag);
+				mag=mag.round(0.00001);
 
-		signal1=LPF.ar(Osc.ar(~b.bufnum,pitch*m,ph1,m.reciprocal),cutt,pitch.reciprocal);
-		signal2=LPF.ar(Osc.ar(~b.bufnum,pitch*m,ph2,m.reciprocal),cutt,pitch.reciprocal);
+		ph1=exp(Complex(0,1)*mag.linlin(0,1,2pi.neg,2pi)*90.degrad).theta;
+		ph2=exp(Complex(0,1)*mag.linlin(0,1,2pi.neg,2pi)).theta;
+
+		amp=m.reciprocal;
+		freq=octave*fund*amp.reciprocal;
+
+		env1=EnvGen.ar(Env.perc(0.01,4,mag),doneAction:2);
+		env2=EnvGen.ar(Env.perc(0.01,4,mag),doneAction:2);
+
+
+			signal1=BPF.ar(Osc.ar(~b.bufnum,freq,ph1,m.reciprocal),freq,rq);
+		signal2=BPF.ar(Osc.ar(~b.bufnum,freq,ph2,m.reciprocal),freq,rq);
 m=m+1;
 pl=pl+1;
 
