@@ -65,23 +65,23 @@ angle4=(angle4+(360-(360/1.6180339887499))).wrap(0,360);						phase4=(Complex(si
 
 		pos1=~posL.[pl]/(2.sqrt);pos2=~posR.[pl]/(2.sqrt);
 
-		mag=(Complex(~magL.[pl]/(2.sqrt),~magR.[pl]/(2.sqrt)).rho/(2.sqrt));
+		mag=Complex(~magL.[pl]/(2.sqrt),~magR.[pl]/(2.sqrt));
 
 		//ph1=SinOsc.ar(mag.reciprocal,~phase1.[pl]);
 		//ph2=SinOsc.ar(mag.reciprocal,~phase2.[pl]);
 
 				mag=mag.round(0.00001);
 
-		ph1=exp(Complex(0,1)*mag.theta*90.degrad).theta;
-		ph2=exp(Complex(0,1)*mag.theta).theta;
+				ph1=exp(Complex(0,1)*(mag.theta*90.degrad));
+		ph2=exp(Complex(0,1)*mag.theta);
 
 		amp=m.reciprocal;
 		freq=pitch*amp.reciprocal;
 
-		env1=EnvGen.ar(Env.sine(8,mag),doneAction:2);
+		env1=EnvGen.ar(Env.sine(8,mag.rho/(2.sqrt)),doneAction:2);
 
-			signal1=BPF.ar(Osc.ar(~b.bufnum,freq,ph1,m.reciprocal),freq,rq);
-		signal2=BPF.ar(Osc.ar(~b.bufnum,freq,ph2,m.reciprocal),freq,rq);
+			signal1=BPF.ar(Osc.ar(~b.bufnum,freq,ph1.theta,m.reciprocal),freq,rq);
+		signal2=BPF.ar(Osc.ar(~b.bufnum,freq,ph2.theta,m.reciprocal),freq,rq);
 m=m+1;
 pl=pl+1;
 
