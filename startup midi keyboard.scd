@@ -17,14 +17,14 @@ s.waitForBoot{
 
 (
 SynthDef.new(\synhtone,{
-arg n=1,cutt=1760*2;
+arg n=1,rq=1;
 var signal1,signal2,env1,env2,pl=89,m=3,fund=55,pitch;
 var pos1,pos2,ph1,ph2,mag;
 var phase1,angle1=0,phase2,angle2=90;
 var phase3,phase4,angle3=0,angle4=0;
 var phase5,angle5=0,mag1,phase6,angle6=0,mag2;
 var env,sig,wt,ang=0,level,levels;
-var rq=1,octave=2,freq,amp;
+var octave=1,freq,amp;
 
 ~levels=720.collect{
 level=exp(Complex(0,1)*ang).imag;
@@ -59,8 +59,9 @@ angle4=(angle4+(360-(360/1.6180339887499))).wrap(0,360);						phase4=(Complex(si
 	phase6=exp(Complex(0,1)*angle6.degrad).theta;
 	angle6=(angle6+(360-(360/1.6180339887499))).wrap(0,360);	mag2=Complex(sin(phase6.round(0.0001)*m),sin(phase6.round(0.0001)*m)).rho.round(0.0001)*Complex(cos(phase6.round(0.0001)*m),cos(phase6.round(0.0001)*m)).rho.round(0.0001);};
 
-pitch=fund*2.pow(n/12);
-45.do{
+			pitch=(fund*octave)*2.pow(n/12);
+
+32.do{
 
 		pos1=~posL.[pl]/(2.sqrt);pos2=~posR.[pl]/(2.sqrt);
 
@@ -75,14 +76,14 @@ pitch=fund*2.pow(n/12);
 		ph2=exp(Complex(0,1)*mag.linlin(0,1,2pi.neg,2pi)).theta;
 
 		amp=m.reciprocal;
-		freq=octave*fund*amp.reciprocal;
+		freq=pitch*amp.reciprocal;
 
 		env1=EnvGen.ar(Env.perc(0.01,4,mag),doneAction:2);
 		env2=EnvGen.ar(Env.perc(0.01,4,mag),doneAction:2);
 
 
-			signal1=BPF.ar(Osc.ar(~b.bufnum,freq,ph1,m.reciprocal),freq,rq);
-		signal2=BPF.ar(Osc.ar(~b.bufnum,freq,ph2,m.reciprocal),freq,rq);
+			signal1=BPF.ar(Osc.ar(~b.bufnum,freq,ph1,m.reciprocal),freq,rq,0.1);
+		signal2=BPF.ar(Osc.ar(~b.bufnum,freq,ph2,m.reciprocal),freq,rq,0.1);
 m=m+1;
 pl=pl+1;
 
@@ -102,7 +103,7 @@ MIDIdef.noteOn(\note, { |val, num, chan, src|
 	if(num < 61) {
 		num = num - 1
 	};
-	~a=Synth(\synhtone, [n: num - 60,cutt:1760*2]);
+	~a=Synth(\synhtone, [\n, num - 60,\rq,1]);
 
 }, noteNum: (36..96));
 );
