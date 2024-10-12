@@ -72,8 +72,8 @@ angle4=(angle4+(360-(360/1.6180339887499))).wrap(0,360);						phase4=(Complex(si
 
 				mag=mag.round(0.00001);
 
-		ph1=exp(Complex(0,1)*mag.linlin(0,1,2pi.neg,2pi)*90.degrad).theta;
-		ph2=exp(Complex(0,1)*mag.linlin(0,1,2pi.neg,2pi)).theta;
+		ph1=exp(Complex(0,1)*mag.theta*90.degrad).theta;
+		ph2=exp(Complex(0,1)*mag.theta).theta;
 
 		amp=m.reciprocal;
 		freq=pitch*amp.reciprocal;
