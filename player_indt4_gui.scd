@@ -14,8 +14,8 @@ s.waitForBoot
 Buffer.freeAll
 
 (
-~c1 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/pinotites2/SC_241016_181246.wav");
-~c1 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/pinotites2/SC_241016_181246.wav");
+~c1 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/SC_241017_230402.wav");
+~c2 = Buffer.read(s,"/Users/petrostatsiopoulos/Music/SuperCollider Recordings/pinotites2/recordings from mics/705140__dibko__231007-04-strnisce-forest-full-of-life-04_remaster.wav");
 )
 
 (
@@ -26,8 +26,8 @@ SynthDef.new(\inst4,
 
 sig1a=HPF.ar(PlayBuf.ar(4, ~c1.bufnum, BufRateScale.kr(~c1), loop: 0, doneAction:2),highpass1.lag(0.333),gain1.lag(0.333));
 sig1b=LPF.ar(PlayBuf.ar(4, ~c1.bufnum, BufRateScale.kr(~c1), loop: 0, doneAction:2),lowpass1.lag(0.333),gain1.lag(0.333));
-sig2a=HPF.ar(PlayBuf.ar(4, ~c1.bufnum, BufRateScale.kr(~c1), loop: 0, doneAction:2),highpass2.lag(0.333),gain2.lag(0.333));
-sig2b=LPF.ar(PlayBuf.ar(4, ~c1.bufnum, BufRateScale.kr(~c1), loop: 0, doneAction:2),lowpass2.lag(0.333),gain2.lag(0.333));
+sig2a=HPF.ar(PlayBuf.ar(4, ~c2.bufnum, BufRateScale.kr(~c2), loop: 0, doneAction:2),highpass2.lag(0.333),gain2.lag(0.333));
+sig2b=LPF.ar(PlayBuf.ar(4, ~c2.bufnum, BufRateScale.kr(~c2), loop: 0, doneAction:2),lowpass2.lag(0.333),gain2.lag(0.333));
 
 	Out.ar(0,sig1a);Out.ar(0,sig2a);Out.ar(0,sig2a);Out.ar(0,sig2b);
 
