@@ -11,7 +11,6 @@ s.options.memSize = 8192*8;
 s.options.blockSize = 64;
 s.options.maxNodes = 1024 * 16;
 s.options.sampleRate= 48000;
-s.waitForBoot
 );
 
 s.waitForBoot{
@@ -873,6 +872,7 @@ mag_o=Cartesian(~magx_array.[pl2].[pl1], ~magy_array.[pl2].[pl1], ~magz_array.[p
 
 			//phase=(exp(Complex(0,1)*(mag_o.theta))*exp(Complex(0,1)*(mag_o.phi))).theta;
 phase=2pi;
+					rpr=~rot_speed.[pl1];
 	    amp1=(ton1.reciprocal*speed*octave.reciprocal*m.reciprocal).round(0.0000000000001);
 		amp2=(ton2.reciprocal*speed*octave.reciprocal*m.reciprocal).round(0.0000000000001);
 		amp3=(ton3.reciprocal*speed*octave.reciprocal*m.reciprocal).round(0.0000000000001);
@@ -919,6 +919,8 @@ Osc.ar(~t.bufnum,rpr,phase:sphere.phi.linlin((pi/2).neg,(pi/2),2pi.neg,2pi),mul:
 			};
 }).add;
 );
+
+	///args to define in midi: octave,decay,speed// octave is set by keyboard, speed has to be toggle switch, decay a potentiometer//// further parameters can be set with BPF through joystick, also joystick can be used in the play_gui file in midi
 
 (
 MIDIClient.init;
