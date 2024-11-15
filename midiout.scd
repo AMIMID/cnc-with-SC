@@ -26,6 +26,19 @@ m.control(0,7,127);
 
 ~midiout.stop
 
+////notes
+(
+{
+	var fundamental=110,tone,n,pitch,pl=1.neg,mult=12;
+	~nx=(720*~time).collect{
+		pl=pl+1;
+		n=Spherical(mult,~az.[pl],~el.[pl]).x;
+tone=2.pow(n/12);
+pitch=fundamental*tone;
+		pitch=pitch.cpsmidi;
+	};
+}.value
+);
 //////pseq arrays
 (
 		~time=2;
