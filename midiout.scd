@@ -32,12 +32,34 @@ m.control(0,7,127);
 	var fundamental=110,tone,n,pitch,pl=1.neg,mult=12;
 	~nx=(720*~time).collect{
 		pl=pl+1;
-		n=Spherical(mult,~az.[pl],~el.[pl]).x;
+		n=Spherical(mult*~magx.[pl],,~az.[pl],~el.[pl]).x;
 tone=2.pow(n/12);
 pitch=fundamental*tone;
 		pitch=pitch.cpsmidi;
 	};
-}.value
+}.value;
+
+{
+	var fundamental=110,tone,n,pitch,pl=1.neg,mult=12;
+	~ny=(720*~time).collect{
+		pl=pl+1;
+		n=Spherical(mult*~magy.[pl],,~az.[pl],~el.[pl]).y;
+tone=2.pow(n/12);
+pitch=fundamental*tone;
+		pitch=pitch.cpsmidi;
+	};
+}.value;
+
+{
+	var fundamental=110,tone,n,pitch,pl=1.neg,mult=12;
+	~nz=(720*~time).collect{
+		pl=pl+1;
+		n=Spherical(mult*~magz.[pl],~az.[pl],~el.[pl]).z;
+tone=2.pow(n/12);
+pitch=fundamental*tone;
+		pitch=pitch.cpsmidi;
+	};
+}.value;
 );
 //////pseq arrays
 (
